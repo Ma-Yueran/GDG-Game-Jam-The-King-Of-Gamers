@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterSkills : MonoBehaviour
+public class Opponent : Character
 {
-    public List<Skill> skills;
+    public int npcID;
 }

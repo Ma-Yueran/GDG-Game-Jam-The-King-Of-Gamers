@@ -11,35 +11,39 @@ public class PlayerMovement : MonoBehaviour
     private float inputH;
     private float inputV;
 
+    private new Rigidbody rigidbody;
     private Animator animator;
     private ThirdPersonCamera thirdPersonCamera;
 
     private void Start()
     {
+        rigidbody = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
         thirdPersonCamera = ThirdPersonCamera.instance;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         inputH = Input.GetAxis("Horizontal");
         inputV = Input.GetAxis("Vertical");
 
-        if (inputH != 0 || inputV != 0)
+        if (rigidbody.velocity.sqrMagnitude > 0.1f)
         {
             animator.SetBool("Walking", true);
         }
         else
         {
             animator.SetBool("Walking", false);
-            return;
         }
 
-        transform.position += transform.forward * movementSpeed * Time.deltaTime;
+        if (inputH != 0 || inputV != 0)
+        {
+            rigidbody.velocity = transform.forward * movementSpeed;
 
-        Vector3 targetDirection = GetTargetDirection();
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.1f);
+            Vector3 targetDirection = GetTargetDirection();
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.1f);
+        }
     }
 
     private Vector3 GetTargetDirection()

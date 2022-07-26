@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    protected CharacterStats characterStats;
-    protected CharacterSkills characterSkills;
+    public List<Skill> skills;
 }

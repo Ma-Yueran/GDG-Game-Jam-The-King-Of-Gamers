@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NPCInteract : MonoBehaviour
 {
+    public Opponent opponent;
+
     private void Awake()
     {
         TurnOffInteractMenu();
@@ -31,6 +33,7 @@ public class NPCInteract : MonoBehaviour
 
     public void ChallengeNPC()
     {
-        GameManager.Instance.StartBattle();
+        Time.timeScale = 1f;
+        GameManager.Instance.StartBattle(opponent);
     }
 }

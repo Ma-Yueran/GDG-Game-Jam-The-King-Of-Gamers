@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public Player playerPrefab;
+
+    public OpponentRegistry OpponentRegistry { get; private set; }
+
     public string battleSceneName;
 
     private string previousSceneName;
@@ -16,6 +20,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            OpponentRegistry = GetComponentInChildren<OpponentRegistry>();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -24,9 +29,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartBattle()
+    public void StartBattle(Opponent opponent)
     {
-        SaveSystem.SavePlayerData(new PlayerData(Player.Instance));
+        SaveSystem.SavePlayerData(Player.Instance);
+        SaveSystem.SaveOpponentData(opponent);
         LoadScene(battleSceneName);
     }
 
