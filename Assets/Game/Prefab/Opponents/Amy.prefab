@@ -194,6 +194,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e44f5dcf06dd5c4bb5a3939e0b7525b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  strength: 10
+  intelligence: 30
+  luck: 20
+  maxHealth: 80
+  resistence: 0.3
+  skills: []
   npcID: 0
 --- !u!1 &1810967974450549973
 GameObject:

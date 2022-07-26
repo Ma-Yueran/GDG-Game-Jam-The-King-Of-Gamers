@@ -8,10 +8,12 @@ public class BattleUI : MonoBehaviour
 {
     public TextMeshProUGUI topPanelText;
     public GameObject playerSkillSelectionPanel;
+    
     public Slider playerHealthBar;
     public Slider opponentHealthBar;
 
     private SkillButton[] skillButtons;
+    private DamageReport damageReport;
 
     private void Awake()
     {
@@ -21,13 +23,15 @@ public class BattleUI : MonoBehaviour
             skillButton.gameObject.SetActive(false);
         }
         playerSkillSelectionPanel.SetActive(false);
+
+        damageReport = GetComponentInChildren<DamageReport>();
     }
 
     public void SetUpPlayerSkills(List<Skill> skills)
     {
         for (int i = 0; i < skills.Count; i++)
         {
-            skillButtons[i].SetUpButtonVisual(skills[i].skillName, skills[i].icon);
+            skillButtons[i].BindSkill(skills[i]);
             skillButtons[i].gameObject.SetActive(true);
         }
     }
@@ -45,6 +49,12 @@ public class BattleUI : MonoBehaviour
     public void HidePlayerSkillSelectionPanel()
     {
         playerSkillSelectionPanel.SetActive(false);
+    }
+
+    public void ShowOpponentTakeDamage(float damage)
+    {
+        string damageText = "Opponent Takes " + damage + " Damage!";
+        damageReport.ShowDamageReport(damageText, 1.5f);
     }
 
     public void SetPlayerHealthBar(float value)

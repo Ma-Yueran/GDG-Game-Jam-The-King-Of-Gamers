@@ -78,8 +78,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5ad55f0523aae4c9e081ac7b6f0372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  strength: 10
+  intelligence: 20
+  luck: 15
+  maxHealth: 100
+  resistence: 0.6
   skills:
+  - {fileID: 11400000, guid: cb95c0b9fb6fe8d4e997f4f0cf7311d3, type: 2}
   - {fileID: 11400000, guid: 734b1271d5de5c04f8409da0e13e8255, type: 2}
+  - {fileID: 11400000, guid: c376ec2a4bd8d7040b910827d39d811e, type: 2}
   isInBattle: 0
 --- !u!114 &2812604249737714907
 MonoBehaviour:

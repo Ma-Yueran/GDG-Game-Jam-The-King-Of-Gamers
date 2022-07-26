@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41fbb3f8925978e4abbaf7800bf702ea, type: 3}
-  m_Name: TestSkill
+  m_Name: TestSkill 1
   m_EditorClassIdentifier: 
-  skillName: Aha!
+  skillName: Quit
+  icon: {fileID: 0}
   strengthMultiplier: 0
   intelligenceMultiplier: 0
   luckMultiplier: 0

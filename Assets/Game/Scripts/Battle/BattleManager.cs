@@ -8,7 +8,7 @@ public class BattleManager : MonoBehaviour
     public Transform opponentPos;
     public BattleUI battleUI;
 
-    private enum BattleState { BattleStart, PlayerTurnStart, PlayerTurn, OpponentTurnStart, OpponentTurn }
+    private enum BattleState { BattleStart, PlayerTurnStart, PlayerTurn, PlayerTurnEnd, OpponentTurnStart, OpponentTurn }
     private BattleState battleState = BattleState.BattleStart;
 
     private Player player;
@@ -16,13 +16,27 @@ public class BattleManager : MonoBehaviour
 
     private float timer;
 
+    public static BattleManager Instance;
+
     private void Awake()
     {
+        if (!Instance)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         Init();
     }
 
     private void Update()
     {
+        battleUI.SetPlayerHealthBar(player.GetCurrentHealthPercentage());
+        battleUI.SetOpponentHealthBar(opponent.GetCurrentHealthPercentage());
+
         switch (battleState)
         {
             case BattleState.BattleStart:
@@ -33,6 +47,9 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleState.PlayerTurn:
                 break;
+            case BattleState.PlayerTurnEnd:
+                PlayerTurnEnd();
+                break;
             case BattleState.OpponentTurnStart:
                 break;
             case BattleState.OpponentTurn:
@@ -40,9 +57,25 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void BattleEnds()
+    public void PlayerUseSkill(Skill skill)
     {
-        GameManager.Instance.BackToPreviousScene();
+        if (battleState != BattleState.PlayerTurn)
+        {
+            Debug.LogError("Player Use Skill called not in player turn");
+            return;
+        }
+
+        battleUI.HidePlayerSkillSelectionPanel();
+
+        battleUI.SetTopPanelText("You used " + skill.skillName + "!");
+
+        Damage rawDamage = player.CalculateSkillRawDamage(skill);
+        float actualDamage = opponent.TakeDamage(rawDamage);
+        
+        battleUI.ShowOpponentTakeDamage(actualDamage);
+
+        battleState = BattleState.PlayerTurnEnd;
+        timer = 1.5f;
     }
 
     private void Init()
@@ -51,6 +84,7 @@ public class BattleManager : MonoBehaviour
         player.isInBattle = true;
         player.transform.position = playerPos.position;
         player.transform.rotation = playerPos.rotation;
+        player.SetToFullHealth();
 
         battleUI.SetUpPlayerSkills(player.skills);
 
@@ -59,9 +93,10 @@ public class BattleManager : MonoBehaviour
         opponent = Instantiate(GameManager.Instance.OpponentRegistry.GetOpponentPrefab(npcID));
         opponent.transform.position = opponentPos.position;
         opponent.transform.rotation = opponentPos.rotation;
+        opponent.SetToFullHealth();
 
         battleState = BattleState.BattleStart;
-        timer = 1.5f;
+        timer = 1f;
     }
 
     private void BattleStart()
@@ -79,5 +114,19 @@ public class BattleManager : MonoBehaviour
         battleUI.SetTopPanelText("Your Turn!");
         battleUI.ShowPlayerSkillSelectionPanel();
         battleState = BattleState.PlayerTurn;
+    }
+
+    private void PlayerTurnEnd()
+    {
+        timer -= Time.deltaTime;
+        if (timer < 0f)
+        {
+            battleState = BattleState.PlayerTurnStart;
+        }
+    }
+
+    public void BattleEnds()
+    {
+        GameManager.Instance.BackToPreviousScene();
     }
 }
